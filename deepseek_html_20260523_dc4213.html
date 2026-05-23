@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Simalungun Cerdas Digital - SMP Ultimate Learning RPG</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0a2a3b 0%, #1a5f4a 100%);
+      font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -1000px 0; }
+      100% { background-position: 1000px 0; }
+    }
+
+    .app {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      background: linear-gradient(135deg, rgba(0, 20, 40, 0.9), rgba(0, 40, 30, 0.9));
+      backdrop-filter: blur(15px);
+      border-radius: 30px;
+      padding: 20px 30px;
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      border: 1px solid rgba(255, 215, 0, 0.4);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, #FFD700, #FF8C00);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      animation: float 3s ease-in-out infinite;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .brand h1 {
+      font-size: 1.8rem;
+      background: linear-gradient(135deg, #FFE66D, #FFB347);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .stats-bar { display: flex; gap: 20px; flex-wrap: wrap; }
+    .stat-card {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 20px;
+      padding: 10px 20px;
+      text-align: center;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      backdrop-filter: blur(5px);
+    }
+    .xp-bar-container { width: 200px; height: 10px; background: #1e3a2f; border-radius: 10px; overflow: hidden; margin-top: 5px; }
+    .xp-bar-fill { height: 100%; background: linear-gradient(90deg, #FFD700, #FF8C00); width: 0%; transition: width 0.5s ease; }
+
+    .nav-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-bottom: 25px; }
+    .nav-btn {
+      background: linear-gradient(135deg, #2c5f6e, #1a3f4a);
+      border: none;
+      padding: 12px 8px;
+      border-radius: 20px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .nav-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    .nav-btn:hover::before { left: 100%; }
+    .nav-btn:hover { transform: translateY(-3px); box-shadow: 0 5px 20px rgba(0,0,0,0.3); }
+
+    .main-grid { display: grid; grid-template-columns: 1fr 350px; gap: 25px; margin-bottom: 25px; }
+
+    .hero-section {
+      background: linear-gradient(135deg, #3a8f6e, #1a5f4a);
+      border-radius: 30px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .hero-title { font-size: 2.5rem; font-weight: bold; color: #FFE66D; text-shadow: 3px 3px 0 #1a3f2a; }
+
+    .subjects-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin-top: 20px; }
+    .subject-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 15px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .subject-card:hover { transform: translateY(-5px) scale(1.02); background: rgba(255, 215, 0, 0.2); border-color: #FFD700; }
+    .subject-icon { font-size: 2.5rem; margin-bottom: 8px; }
+
+    .progress-badge {
+      display: inline-block;
+      background: rgba(0,0,0,0.5);
+      border-radius: 20px;
+      padding: 2px 8px;
+      font-size: 0.7rem;
+      margin-top: 5px;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    .modal-content {
+      background: linear-gradient(135deg, #1a3f4a, #0a2a3a);
+      border-radius: 30px;
+      padding: 30px;
+      max-width: 700px;
+      width: 90%;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+    .quiz-option {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 15px;
+      color: white;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+      font-size: 1rem;
+    }
+    .quiz-option:hover { background: rgba(255, 215, 0, 0.3); transform: translateX(5px); }
+    .quiz-option.correct { background: #27ae60; animation: pulse 0.3s; }
+    .quiz-option.wrong { background: #e74c3c; }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #2c5f6e, #1a3f4a);
+      padding: 15px 25px;
+      border-radius: 15px;
+      animation: slideIn 0.3s ease;
+      z-index: 1000;
+      border-left: 5px solid #FFD700;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .achievement-badge {
+      background: rgba(0,0,0,0.3);
+      border-radius: 12px;
+      padding: 10px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .achievement-unlocked { background: linear-gradient(135deg, #ffd70030, #ff8c0030); border-left: 3px solid #FFD700; }
+
+    @media (max-width: 1000px) {
+      .main-grid { grid-template-columns: 1fr; }
+      .subjects-grid { grid-template-columns: repeat(3, 1fr); }
+      .hero-title { font-size: 1.8rem; }
+    }
+    @media (max-width: 600px) {
+      .subjects-grid { grid-template-columns: repeat(2, 1fr); }
+      .nav-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="brand">
+      <div class="logo">🏫</div>
+      <div>
+        <small>PEMKAB SIMALUNGUN · DINAS PENDIDIKAN</small>
+        <h1>SIMALUNGUN CERDAS DIGITAL</h1>
+        <small>✨ SMP Level Up! 100+ Soal Interaktif ✨</small>
+      </div>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-card"><div>🏆 Level <span id="levelDisplay">1</span></div>
+        <div class="xp-bar-container"><div class="xp-bar-fill" id="xpBarFill"></div></div>
+        <small>XP: <span id="xpDisplay">0</span>/<span id="maxXpDisplay">1000</span></small>
+      </div>
+      <div class="stat-card"><div>🪙 Koin</div><div style="font-size: 1.5rem; font-weight: bold;" id="coinDisplay">0</div></div>
+      <div class="stat-card"><div>⚡ Energy</div><div style="font-size: 1.5rem; font-weight: bold;" id="energyDisplay">100</div></div>
+      <div class="stat-card"><div>📊 Quiz Passed</div><div style="font-size: 1.2rem; font-weight: bold;" id="quizPassedDisplay">0</div></div>
+    </div>
+  </div>
+
+  <div class="nav-grid">
+    <button class="nav-btn" onclick="showSection('home')">🏠 Beranda</button>
+    <button class="nav-btn" onclick="showSection('subjects')">📚 10 Mapel SMP</button>
+    <button class="nav-btn" onclick="showSection('achievements')">🏅 Prestasi</button>
+    <button class="nav-btn" onclick="showSection('shop')">🛒 Toko</button>
+    <button class="nav-btn" onclick="dailyReward()">🎁 Daily Reward</button>
+    <button class="nav-btn" onclick="showLeaderboard()">🏆 Leaderboard</button>
+  </div>
+
+  <div class="main-grid">
+    <div>
+      <div class="hero-section" id="homeSection">
+        <div class="hero-title">BELAJAR ASYIK<br>RAIH PRESTASI!</div>
+        <p>10 Mata Pelajaran SMP · 100+ Soal Kuis · Sistem Level & Achievement</p>
+        <div style="font-size: 2.5rem; margin-top: 15px;">👨‍🎓 🎮 🏅 📚</div>
+        <button class="nav-btn" style="margin-top: 15px; width: auto; display: inline-block;" onclick="showSection('subjects')">🚀 Mulai Belajar</button>
+      </div>
+
+      <div class="hero-section" id="subjectsSection" style="display: none;">
+        <h3>📚 10 MATA PELAJARAN SMP</h3>
+        <p style="margin-bottom: 15px;">Klik mapel untuk belajar materi, lalu ikuti kuis 10 soal!</p>
+        <div class="subjects-grid" id="subjectsGrid"></div>
+      </div>
+
+      <div class="hero-section" id="achievementsSection" style="display: none;">
+        <h3>🏅 PENCAPAIAN</h3>
+        <div id="achievementsList"></div>
+      </div>
+
+      <div class="hero-section" id="leaderboardSection" style="display: none;">
+        <h3>🏆 LEADERBOARD NASIONAL</h3>
+        <div id="leaderboardList"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="hero-section">
+        <h3>📖 Materi Pelajaran</h3>
+        <div id="materiPreview" style="max-height: 300px; overflow-y: auto;">
+          <p style="color: #ccc;">Pilih mata pelajaran untuk melihat materi</p>
+        </div>
+      </div>
+      <div class="hero-section">
+        <h3>🎯 Progress Belajar</h3>
+        <div id="progressStats"></div>
+      </div>
+      <div class="hero-section" id="shopSection" style="display: none;">
+        <h3>🛒 Toko Item</h3>
+        <div id="shopContent"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ==================== 10 MATA PELAJARAN DENGAN 10 SOAL MASING-MASING ====================
+  const subjects = [
+    { id: 'matematika', name: 'Matematika', icon: '🔢', color: '#e74c3c', xpReward: 50, energyCost: 12,
+      materi: ['Bilangan Bulat & Pecahan', 'Aljabar Dasar', 'Persamaan Linear', 'Perbandingan & Skala', 'Bangun Datar', 'Bangun Ruang', 'Statistika Dasar', 'Peluang', 'Aritmatika Sosial', 'Pola Bilangan'],
+      quiz: [
+        { q: 'Hasil dari (-12) + 8 - (-5) = ...', o: ['-9', '-1', '1', '9'], c: 2, exp: '-12 + 8 = -4, -4 - (-5) = -4 + 5 = 1' },
+        { q: 'Bentuk sederhana dari 3(2x - 4) adalah...', o: ['6x - 12', '6x - 4', '5x - 7', '6x + 12'], c: 0, exp: '3 × 2x = 6x, 3 × (-4) = -12' },
+        { q: 'Jika 2x + 5 = 13, maka nilai x = ...', o: ['3', '4', '5', '6'], c: 1, exp: '2x = 8, x = 4' },
+        { q: 'Perbandingan usia Ani dan Budi 2:3. Jika usia Ani 12 tahun, usia Budi...', o: ['16', '18', '20', '24'], c: 1, exp: '2:3 = 12:x → x = 18' },
+        { q: 'Luas lingkaran dengan jari-jari 7 cm adalah... (π=22/7)', o: ['154 cm²', '44 cm²', '88 cm²', '308 cm²'], c: 0, exp: 'L = πr² = 22/7 × 7 × 7 = 154' },
+        { q: 'Volume kubus dengan rusuk 5 cm adalah...', o: ['25 cm³', '125 cm³', '100 cm³', '150 cm³'], c: 1, exp: 'V = s³ = 5³ = 125' },
+        { q: 'Rata-rata dari data 7, 8, 6, 9, 5 adalah...', o: ['6', '7', '8', '9'], c: 1, exp: '(7+8+6+9+5)/5 = 35/5 = 7' },
+        { q: 'Seorang pedagang membeli barang seharga Rp200.000 dan menjualnya Rp240.000. Persentase keuntungan...', o: ['10%', '15%', '20%', '25%'], c: 2, exp: 'Untung = 40.000, % = 40.000/200.000 × 100% = 20%' },
+        { q: 'Bilangan berikut yang merupakan kelipatan 7 adalah...', o: ['21', '27', '35', '42'], c: 0, exp: '21 = 7×3, 35=7×5, 42=7×6, yang pertama adalah 21' },
+        { q: 'Hasil dari 2⁵ adalah...', o: ['16', '32', '64', '128'], c: 1, exp: '2⁵ = 2×2×2×2×2 = 32' }
+      ] },
+    { id: 'ipa', name: 'IPA', icon: '🧪', color: '#27ae60', xpReward: 50, energyCost: 12,
+      materi: ['Tata Surya', 'Fotosintesis', 'Sistem Pernapasan', 'Sistem Pencernaan', 'Hukum Newton', 'Listrik Dinamis', 'Ekosistem', 'Pencemaran Lingkungan', 'Struktur Bumi', 'Gerak Benda'],
+      quiz: [
+        { q: 'Planet terbesar dalam tata surya adalah...', o: ['Jupiter', 'Saturnus', 'Bumi', 'Mars'], c: 0, exp: 'Jupiter adalah planet terbesar' },
+        { q: 'Proses pembuatan makanan pada tumbuhan disebut...', o: ['Respirasi', 'Fotosintesis', 'Transpirasi', 'Osmosis'], c: 1, exp: 'Fotosintesis menghasilkan makanan dan oksigen' },
+        { q: 'Organ pernapasan yang berfungsi sebagai tempat pertukaran gas adalah...', o: ['Trakea', 'Bronkus', 'Alveolus', 'Laring'], c: 2, exp: 'Alveolus adalah tempat pertukaran O₂ dan CO₂' },
+        { q: 'Hukum Newton II menyatakan bahwa...', o: ['F = m × a', 'F = m / a', 'a = F × m', 'F = a / m'], c: 0, exp: 'Gaya = massa × percepatan' },
+        { q: 'Sumber energi utama bagi bumi adalah...', o: ['Bulan', 'Matahari', 'Bintang', 'Planet'], c: 1, exp: 'Matahari adalah sumber energi utama' },
+        { q: 'Tumbuhan hijau disebut produsen karena...', o: ['Dapat berjalan', 'Dapat membuat makanan sendiri', 'Dapat berkembang biak', 'Dapat bernapas'], c: 1, exp: 'Produsen dapat membuat makanannya sendiri melalui fotosintesis' },
+        { q: 'Berikut yang termasuk hewan karnivora adalah...', o: ['Sapi', 'Kambing', 'Harimau', 'Kelinci'], c: 2, exp: 'Harimau pemakan daging (karnivora)' },
+        { q: 'Satuan kuat arus listrik adalah...', o: ['Volt', 'Ohm', 'Ampere', 'Watt'], c: 2, exp: 'Ampere adalah satuan kuat arus listrik' },
+        { q: 'Lapisan bumi yang paling luar adalah...', o: ['Mantel', 'Inti', 'Kerak', 'Magma'], c: 2, exp: 'Kerak bumi adalah lapisan terluar' },
+        { q: 'Gaya yang menghambat gerak benda disebut...', o: ['Gaya gravitasi', 'Gaya gesek', 'Gaya otot', 'Gaya pegas'], c: 1, exp: 'Gaya gesek menghambat gerak benda' }
+      ] },
+    { id: 'ips', name: 'IPS', icon: '🌍', color: '#2980b9', xpReward: 50, energyCost: 12,
+      materi: ['Kerajaan Hindu-Buddha', 'Kerajaan Islam', 'Masa Penjajahan', 'Pergerakan Nasional', 'Proklamasi Kemerdekaan', 'Geografi Indonesia', 'Kondisi Simalungun', 'Interaksi Sosial', 'Globalisasi', 'Lembaga Sosial'],
+      quiz: [
+        { q: 'Kerajaan Hindu tertua di Indonesia adalah...', o: ['Majapahit', 'Kutai', 'Sriwijaya', 'Mataram'], c: 1, exp: 'Kerajaan Kutai (Kalimantan) abad ke-4 M' },
+        { q: 'Proklamasi Kemerdekaan Indonesia pada tanggal...', o: ['17 Agustus 1945', '18 Agustus 1945', '16 Agustus 1945', '19 Agustus 1945'], c: 0, exp: '17 Agustus 1945 adalah hari kemerdekaan RI' },
+        { q: 'Tokoh yang membacakan teks proklamasi adalah...', o: ['Moh Hatta', 'Soekarno', 'Soeharto', 'Sudirman'], c: 1, exp: 'Ir. Soekarno membacakan proklamasi' },
+        { q: 'Danau Toba terletak di provinsi...', o: ['Sumatera Barat', 'Sumatera Utara', 'Riau', 'Jambi'], c: 1, exp: 'Danau Toba berada di Sumatera Utara' },
+        { q: 'Ibu kota Kabupaten Simalungun adalah...', o: ['Pematang Siantar', 'Raya', 'Perdagangan', 'Pematang Raya'], c: 3, exp: 'Pematang Raya adalah ibu kota Simalungun' },
+        { q: 'Bangsa yang menjajah Indonesia terlama adalah...', o: ['Portugis', 'Inggris', 'Belanda', 'Jepang'], c: 2, exp: 'Belanda ±350 tahun' },
+        { q: 'Sumpah Pemuda terjadi pada tahun...', o: ['1926', '1928', '1930', '1945'], c: 1, exp: 'Sumpah Pemuda 28 Oktober 1928' },
+        { q: 'Selat yang menghubungkan Indonesia dan Malaysia adalah...', o: ['Selat Sunda', 'Selat Malaka', 'Selat Bali', 'Selat Lombok'], c: 1, exp: 'Selat Malaka adalah jalur perdagangan penting' },
+        { q: 'Gunung tertinggi di Indonesia adalah...', o: ['Krakatau', 'Merapi', 'Puncak Jaya', 'Kerinci'], c: 2, exp: 'Puncak Jaya (4.884 m) di Papua' },
+        { q: 'Tari tor-tor berasal dari daerah...', o: ['Jawa', 'Sumatera Utara', 'Bali', 'Sulawesi'], c: 1, exp: 'Tor-tor adalah tarian khas Batak Simalungun' }
+      ] },
+    { id: 'bind', name: 'Bahasa Indonesia', icon: '📖', color: '#8e44ad', xpReward: 45, energyCost: 10,
+      materi: ['Teks Deskripsi', 'Teks Narasi', 'Teks Eksposisi', 'Teks Argumentasi', 'Pantun', 'Puisi', 'Cerpen', 'Fabel', 'Surat Resmi', 'Iklan'],
+      quiz: [
+        { q: 'Teks yang menggambarkan suatu objek disebut...', o: ['Deskripsi', 'Narasi', 'Eksposisi', 'Argumentasi'], c: 0, exp: 'Deskripsi menggambarkan objek' },
+        { q: 'Pantun bersajak...', o: ['a-a-a-a', 'a-b-a-b', 'a-b-b-a', 'a-a-b-b'], c: 1, exp: 'Pantun bersajak a-b-a-b' },
+        { q: 'Cerita yang tokohnya berupa hewan disebut...', o: ['Legenda', 'Fabel', 'Mite', 'Sage'], c: 1, exp: 'Fabel tokohnya hewan' },
+        { q: 'Kata baku dari "ijin" adalah...', o: ['Ijin', 'Izinkan', 'Izin', 'Ijinkan'], c: 2, exp: 'Izin adalah bentuk baku' },
+        { q: 'Amanat dalam cerita adalah...', o: ['Tema', 'Pesan moral', 'Latar', 'Alur'], c: 1, exp: 'Amanat = pesan moral' },
+        { q: 'Surat resmi harus menggunakan bahasa...', o: ['Gaul', 'Baku', 'Daerah', 'Asing'], c: 1, exp: 'Bahasa baku untuk surat resmi' },
+        { q: 'Puisi lama yang terdiri dari 4 baris adalah...', o: ['Gurindam', 'Syair', 'Pantun', 'Soneta'], c: 2, exp: 'Pantun adalah puisi lama 4 baris' },
+        { q: 'Kalimat berikut yang merupakan fakta adalah...', o: ['Danau Toba indah', 'Simalungun di Sumut', 'Belajar menyenangkan', 'Makanan ini enak'], c: 1, exp: 'Fakta adalah kenyataan yang terbukti' },
+        { q: 'Sinonim dari kata "cepat" adalah...', o: ['Lambat', 'Perlahan', 'Cepat', 'Kencang'], c: 3, exp: 'Kencang adalah sinonim cepat' },
+        { q: 'Antonim dari kata "panas" adalah...', o: ['Dingin', 'Panas', 'Gerah', 'Hangat'], c: 0, exp: 'Lawan kata panas adalah dingin' }
+      ] },
+    { id: 'bing', name: 'Bahasa Inggris', icon: '🇬🇧', color: '#3498db', xpReward: 45, energyCost: 10,
+      materi: ['Greeting', 'Simple Present', 'Simple Past', 'Present Continuous', 'Descriptive Text', 'Procedure Text', 'Report Text', 'Narrative Text', 'Recount Text', 'Vocabulary'],
+      quiz: [
+        { q: '"She ___ to school every day"', o: ['go', 'goes', 'going', 'went'], c: 1, exp: 'She goes (subjek tunggal + s/es)' },
+        { q: 'Good morning artinya...', o: ['Selamat siang', 'Selamat pagi', 'Selamat sore', 'Selamat malam'], c: 1, exp: 'Good morning = selamat pagi' },
+        { q: '"I ___ to Medan last week"', o: ['go', 'goes', 'went', 'going'], c: 2, exp: 'Last week → past tense → went' },
+        { q: '"Thank you" dalam bahasa Indonesia adalah...', o: ['Terima kasih', 'Maaf', 'Selamat', 'Halo'], c: 0, exp: 'Thank you = terima kasih' },
+        { q: 'Arti dari "Beautiful" adalah...', o: ['Besar', 'Kecil', 'Indah', 'Baru'], c: 2, exp: 'Beautiful = indah/cantik' },
+        { q: '"I am ___ football now" (sedang bermain)', o: ['play', 'plays', 'playing', 'played'], c: 2, exp: 'Now → present continuous → playing' },
+        { q: 'Bahasa Inggrisnya "SMP" adalah...', o: ['Elementary School', 'Junior High School', 'Senior High School', 'University'], c: 1, exp: 'SMP = Junior High School' },
+        { q: '"How are you?" dijawab...', o: ['Good morning', 'I am fine', 'Thank you', 'You are welcome'], c: 1, exp: 'I am fine, thank you' },
+        { q: 'Arti kata "Friend" adalah...', o: ['Musuh', 'Teman', 'Keluarga', 'Guru'], c: 1, exp: 'Friend = teman' },
+        { q: '"Good bye" artinya...', o: ['Selamat datang', 'Selamat tinggal', 'Selamat belajar', 'Selamat makan'], c: 1, exp: 'Good bye = selamat tinggal' }
+      ] },
+    { id: 'ppkn', name: 'PPKN', icon: '🛡️', color: '#e67e22', xpReward: 45, energyCost: 10,
+      materi: ['Pancasila', 'UUD 1945', 'NKRI', 'Hak & Kewajiban', 'Demokrasi', 'Kedaulatan Rakyat', 'Bhinneka Tunggal Ika', 'Pemerintahan Daerah', 'Hukum', 'Ham'],
+      quiz: [
+        { q: 'Pancasila tercantum dalam Pembukaan UUD 1945 alinea...', o: ['I', 'II', 'III', 'IV'], c: 3, exp: 'Alinea IV memuat Pancasila' },
+        { q: 'Bhinneka Tunggal Ika berarti...', o: ['Bersatu kita teguh', 'Berbeda-beda tetap satu', 'Satu nusa', 'Indonesia raya'], c: 1, exp: 'Berbeda-beda tetapi tetap satu' },
+        { q: 'Lambang sila pertama Pancasila adalah...', o: ['Bintang', 'Rantai', 'Pohon Beringin', 'Kepala Banteng'], c: 0, exp: 'Bintang = Ketuhanan Yang Maha Esa' },
+        { q: 'Bendera Indonesia disebut...', o: ['Merah Putih', 'Sang Saka Merah Putih', 'Dwiwarna', 'Semua benar'], c: 3, exp: 'Semua benar' },
+        { q: 'Lagu kebangsaan Indonesia adalah...', o: ['Indonesia Raya', 'Maju Tak Gentar', 'Garuda Pancasila', 'Halo-Halo Bandung'], c: 0, exp: 'Indonesia Raya adalah lagu kebangsaan' },
+        { q: 'Hak mendapatkan pendidikan tercantum dalam UUD pasal...', o: ['28', '29', '30', '31'], c: 3, exp: 'Pasal 31 tentang pendidikan' },
+        { q: 'Semboyan negara Indonesia adalah...', o: ['Bhinneka Tunggal Ika', 'Bersatu Kita Teguh', 'Merdeka', 'Jayalah Indonesiaku'], c: 0, exp: 'Bhinneka Tunggal Ika' },
+        { q: 'Lembaga yang berwenang mengubah UUD adalah...', o: ['Presiden', 'DPR', 'MPR', 'MA'], c: 2, exp: 'MPR berwenang mengubah UUD' },
+        { q: 'Pemilihan umum (Pemilu) diselenggarakan oleh...', o: ['KPU', 'Bawaslu', 'DPR', 'Presiden'], c: 0, exp: 'KPU menyelenggarakan Pemilu' },
+        { q: 'Kedaulatan tertinggi di Indonesia berada di tangan...', o: ['Presiden', 'Rakyat', 'DPR', 'Mahkamah Agung'], c: 1, exp: 'Kedaulatan di tangan rakyat (Pasal 1 ayat 2 UUD 1945)' }
+      ] },
+    { id: 'senbud', name: 'Seni Budaya', icon: '🎨', color: '#9b59b6', xpReward: 40, energyCost: 8,
+      materi: ['Seni Rupa', 'Seni Musik', 'Seni Tari', 'Seni Teater', 'Tari Simalungun', 'Alat Musik Tradisional', 'Menggambar', 'Mewarnai', 'Kolase', 'Kerajinan Tangan'],
+      quiz: [
+        { q: 'Tari Tor-tor berasal dari daerah...', o: ['Jawa', 'Sumatera Utara', 'Bali', 'Papua'], c: 1, exp: 'Tor-tor tarian khas Batak Simalungun' },
+        { q: 'Alat musik ritmis adalah...', o: ['Gitar', 'Piano', 'Drum', 'Biola'], c: 2, exp: 'Drum menghasilkan irama/ritme' },
+        { q: 'Gambar yang menggunakan teknik blok disebut...', o: ['Gambar perspektif', 'Gambar siluet', 'Gambar sketsa', 'Gambar ilustrasi'], c: 1, exp: 'Siluet adalah gambar blok hitam' },
+        { q: 'Tangga nada diatonis terdiri dari...', o: ['5 nada', '6 nada', '7 nada', '8 nada'], c: 2, exp: 'Diatonis = 7 nada (do-re-mi-fa-so-la-si)' },
+        { q: 'Seruling termasuk alat musik...', o: ['Petik', 'Gesek', 'Tiup', 'Tekan'], c: 2, exp: 'Seruling ditiup' },
+        { q: 'Tari Piring berasal dari...', o: ['Jawa Barat', 'Sumatera Barat', 'Bali', 'Jawa Timur'], c: 1, exp: 'Tari Piring dari Minangkabau, Sumatera Barat' },
+        { q: 'Warna primer adalah...', o: ['Merah, Kuning, Hijau', 'Merah, Biru, Kuning', 'Merah, Biru, Hijau', 'Kuning, Hijau, Biru'], c: 1, exp: 'Primer: merah, biru, kuning' },
+        { q: 'Karya seni dari potongan kertas disebut...', o: ['Lukisan', 'Kolase', 'Mozaik', 'Grafis'], c: 1, exp: 'Kolase dari potongan kertas' },
+        { q: 'Gong termasuk alat musik...', o: ['Tiup', 'Petik', 'Pukul', 'Gesek'], c: 2, exp: 'Gong dipukul' },
+        { q: 'Seni pertunjukan yang mengutamakan gerak adalah...', o: ['Musik', 'Tari', 'Teater', 'Lukis'], c: 1, exp: 'Tari mengutamakan gerak' }
+      ] },
+    { id: 'pjok', name: 'PJOK', icon: '⚽', color: '#1abc9c', xpReward: 40, energyCost: 8,
+      materi: ['Sepak Bola', 'Bola Basket', 'Bola Voli', 'Atletik', 'Senam', 'Renang', 'Kebugaran Jasmani', 'Pola Hidup Sehat', 'Pertolongan Pertama', 'Olahraga Tradisional'],
+      quiz: [
+        { q: 'Jumlah pemain sepak bola dalam satu tim adalah...', o: ['10', '11', '12', '13'], c: 1, exp: '11 pemain termasuk kiper' },
+        { q: 'Permainan bola basket ditemukan oleh...', o: ['James Naismith', 'William Morgan', 'John Smith', 'Michael Jordan'], c: 0, exp: 'James Naismith perintis bola basket' },
+        { q: 'Induk organisasi sepak bola dunia adalah...', o: ['FIFA', 'PSSI', 'FIBA', 'FIVB'], c: 0, exp: 'FIFA (Federation Internationale de Football Association)' },
+        { q: 'Lari jarak pendek disebut...', o: ['Maraton', 'Sprint', 'Jogging', 'Cross country'], c: 1, exp: 'Sprint = lari cepat jarak pendek' },
+        { q: 'Senam lantai roll depan disebut...', o: ['Forward roll', 'Back roll', 'Headstand', 'Handstand'], c: 0, exp: 'Forward roll = guling depan' },
+        { q: 'Gaya renang tercepat adalah...', o: ['Dada', 'Bebas', 'Punggung', 'Kupu-kupu'], c: 1, exp: 'Gaya bebas (crawl) tercepat' },
+        { q: 'Ukuran lapangan basket adalah...', o: ['26×14 m', '28×15 m', '30×16 m', '32×17 m'], c: 1, exp: 'Lapangan basket 28×15 m' },
+        { q: 'Induk organisasi sepak bola Indonesia adalah...', o: ['PSSI', 'FIFA', 'PBSI', 'PTMSI'], c: 0, exp: 'PSSI (Persatuan Sepak Bola Seluruh Indonesia)' },
+        { q: 'Pemanasan sebelum olahraga bertujuan...', o: ['Melemaskan otot', 'Mencegah cedera', 'Meningkatkan denyut jantung', 'Semua benar'], c: 3, exp: 'Semua manfaat pemanasan' },
+        { q: 'Permainan bulu tangkis menggunakan alat bernama...', o: ['Bet', 'Raket', 'Stik', 'Net'], c: 1, exp: 'Raket untuk bulu tangkis' }
+      ] },
+    { id: 'prakarya', name: 'Prakarya', icon: '✂️', color: '#f39c12', xpReward: 40, energyCost: 8,
+      materi: ['Kerajinan Tangan', 'Budidaya Tanaman', 'Pengolahan Makanan', 'Rekayasa Sederhana', 'Limbah Anorganik', 'Limbah Organik', 'Hidroponik', 'Akuaponik', 'Makanan Awetan', 'Daur Ulang'],
+      quiz: [
+        { q: 'Hidroponik adalah budidaya tanpa menggunakan...', o: ['Air', 'Tanah', 'Pupuk', 'Cahaya'], c: 1, exp: 'Hidroponik menggunakan air, bukan tanah' },
+        { q: 'Limbah yang sulit diuraikan disebut...', o: ['Organik', 'Anorganik', 'Basah', 'Kering'], c: 1, exp: 'Anorganik sulit terurai (plastik, kaca)' },
+        { q: 'Kerajinan dari kain perca disebut...', o: ['Kolase', 'Quilt', 'Mozaik', 'Makrame'], c: 1, exp: 'Quilt dari kain perca' },
+        { q: 'Pengolahan makanan dengan suhu rendah disebut...', o: ['Pasteurisasi', 'Pendinginan', 'Pengeringan', 'Pengasapan'], c: 1, exp: 'Pendinginan suhu rendah' },
+        { q: 'Contoh tanaman hidroponik yang mudah adalah...', o: ['Padi', 'Selada', 'Jagung', 'Singkong'], c: 1, exp: 'Selada mudah ditanam hidroponik' },
+        { q: 'Kertas bekas dapat didaur ulang menjadi...', o: ['Plastik', 'Kardus', 'Kaca', 'Logam'], c: 1, exp: 'Kertas bekas menjadi kardus/kertas baru' },
+        { q: 'Teknik menjahit dengan tusuk rantai disebut...', o: ['Jahit jelujur', 'Jahit feston', 'Jahit rantai', 'Jahit tikam'], c: 2, exp: 'Jahit rantai (chain stitch)' },
+        { q: 'Contoh limbah organik adalah...', o: ['Plastik', 'Kaleng', 'Daun kering', 'Kaca'], c: 2, exp: 'Daun kering mudah terurai' },
+        { q: 'Akuaponik menggabungkan...', o: ['Tanam dan ternak', 'Tanam dan ikan', 'Ikan dan kerang', 'Kerang dan udang'], c: 1, exp: 'Akuaponik = tanaman + ikan' },
+        { q: 'Produk olahan dari kedelai adalah...', o: ['Tahu', 'Kerupuk', 'Keripik', 'Kue'], c: 0, exp: 'Tahu dan tempe dari kedelai' }
+      ] },
+    { id: 'informatika', name: 'Informatika', icon: '💻', color: '#00a8ff', xpReward: 45, energyCost: 10,
+      materi: ['Dasar Pemrograman', 'Algoritma', 'Jaringan Komputer', 'Keamanan Digital', 'Pengolahan Data', 'Pemrograman Visual', 'Internet of Things', 'Artificial Intelligence', 'Etika Digital', 'Komputasi Awan'],
+      quiz: [
+        { q: 'Kepanjangan LAN adalah...', o: ['Local Area Network', 'Large Area Network', 'Land Area Network', 'Long Area Network'], c: 0, exp: 'LAN = Local Area Network' },
+        { q: 'Sistem operasi Windows dibuat oleh...', o: ['Apple', 'Microsoft', 'Linux', 'Google'], c: 1, exp: 'Microsoft pembuat Windows' },
+        { q: 'Berikut yang termasuk media penyimpanan adalah...', o: ['Monitor', 'Keyboard', 'Harddisk', 'Mouse'], c: 2, exp: 'Harddisk menyimpan data' },
+        { q: 'Perangkat untuk mencetak dokumen disebut...', o: ['Scanner', 'Printer', 'Monitor', 'Speaker'], c: 1, exp: 'Printer mencetak dokumen' },
+        { q: 'CPU kepanjangan dari...', o: ['Central Processing Unit', 'Computer Personal Unit', 'Central Program Unit', 'Computer Processing Unit'], c: 0, exp: 'CPU = otak komputer' },
+        { q: 'Aplikasi untuk mengolah kata adalah...', o: ['Excel', 'Word', 'PowerPoint', 'Access'], c: 1, exp: 'Microsoft Word pengolah kata' },
+        { q: 'RAM kepanjangan dari...', o: ['Random Access Memory', 'Read Access Memory', 'Run Access Memory', 'Remote Access Memory'], c: 0, exp: 'RAM = Random Access Memory' },
+        { q: 'Internet adalah kependekan dari...', o: ['International Network', 'Interconnection Network', 'Internal Network', 'Integrated Network'], c: 1, exp: 'Interconnection Networking' },
+        { q: 'Alamat website biasanya diawali dengan...', o: ['HTTP', 'WWW', 'FTP', 'URL'], c: 1, exp: 'WWW (World Wide Web)' },
+        { q: 'Tindakan membajak software disebut...', o: ['Piracy', 'Hacking', 'Cracking', 'Phising'], c: 0, exp: 'Software piracy = pembajakan' }
+      ] }
+  ];
+
+  // Game State
+  let gameState = {
+    level: 1, xp: 0, maxXp: 1000, coins: 500, energy: 100,
+    lastDaily: null,
+    quizPassed: 0,
+    subjectProgress: {},
+    achievements: [],
+    dailyMissions: { study: { current: 0, target: 3, completed: false, reward: 150 } }
+  };
+
+  // Initialize
+  function init() {
+    loadGame();
+    subjects.forEach(sub => {
+      if (!gameState.subjectProgress[sub.id]) {
+        gameState.subjectProgress[sub.id] = { quizCompleted: false, bestScore: 0 };
+      }
+    });
+    updateUI();
+    renderSubjects();
+    renderProgressStats();
+    renderAchievements();
+    saveGame();
+  }
+
+  function saveGame() { localStorage.setItem('simalungunUltimate', JSON.stringify(gameState)); }
+  function loadGame() {
+    const saved = localStorage.getItem('simalungunUltimate');
+    if (saved) {
+      const loaded = JSON.parse(saved);
+      Object.assign(gameState, loaded);
+    }
+  }
+
+  function updateUI() {
+    document.getElementById('levelDisplay').innerText = gameState.level;
+    document.getElementById('xpDisplay').innerText = gameState.xp;
+    document.getElementById('maxXpDisplay').innerText = gameState.maxXp;
+    document.getElementById('coinDisplay').innerText = gameState.coins;
+    document.getElementById('energyDisplay').innerText = gameState.energy;
+    document.getElementById('quizPassedDisplay').innerText = gameState.quizPassed;
+    const percent = (gameState.xp / gameState.maxXp) * 100;
+    document.getElementById('xpBarFill').style.width = percent + '%';
+  }
+
+  function addXP(amount) {
+    gameState.xp += amount;
+    let leveledUp = false;
+    while (gameState.xp >= gameState.maxXp) {
+      gameState.xp -= gameState.maxXp;
+      gameState.level++;
+      gameState.maxXp = Math.floor(gameState.maxXp * 1.2);
+      leveledUp = true;
+      showToast(`🎉 LEVEL UP! Level ${gameState.level}! 🎉`, 3000);
+    }
+    updateUI();
+    saveGame();
+  }
+
+  function showToast(msg, duration = 2000) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerText = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), duration);
+  }
+
+  function showSection(section) {
+    document.getElementById('homeSection').style.display = section === 'home' ? 'block' : 'none';
+    document.getElementById('subjectsSection').style.display = section === 'subjects' ? 'block' : 'none';
+    document.getElementById('achievementsSection').style.display = section === 'achievements' ? 'block' : 'none';
+    document.getElementById('shopSection').style.display = section === 'shop' ? 'block' : 'none';
+    document.getElementById('leaderboardSection').style.display = section === 'leaderboard' ? 'block' : 'none';
+    if (section === 'shop') renderShop();
+    if (section === 'achievements') renderAchievements();
+    if (section === 'leaderboard') showLeaderboard();
+  }
+
+  function renderSubjects() {
+    const grid = document.getElementById('subjectsGrid');
+    grid.innerHTML = subjects.map(sub => {
+      const progress = gameState.subjectProgress[sub.id];
+      const completed = progress?.quizCompleted || false;
+      return `
+        <div class="subject-card" onclick="showSubjectMateri('${sub.id}')" style="border-color: ${completed ? '#FFD700' : 'rgba(255,255,255,0.2)'}">
+          <div class="subject-icon">${sub.icon}</div>
+          <div><strong>${sub.name}</strong></div>
+          <div class="progress-badge">${completed ? '✅ Lulus' : '📝 10 Soal'}</div>
+          <small>⚡ ${sub.energyCost} 🔋</small>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function showSubjectMateri(subjectId) {
+    const subject = subjects.find(s => s.id === subjectId);
+    if (!subject) return;
+    const progress = gameState.subjectProgress[subjectId];
+    const materiHtml = subject.materi.map((m, i) => `<li style="margin-bottom: 5px;">📌 ${i+1}. ${m}</li>`).join('');
+    document.getElementById('materiPreview').innerHTML = `
+      <div style="background: rgba(0,0,0,0.3); border-radius: 15px; padding: 15px;">
+        <h4 style="color: #FFD700;">📖 ${subject.name}</h4>
+        <p><strong>Materi Pembelajaran:</strong></p>
+        <ul style="margin-left: 20px; margin-top: 10px;">${materiHtml}</ul>
+        ${!progress?.quizCompleted ? 
+          `<button class="nav-btn" style="margin-top: 15px; width: 100%;" onclick="startQuiz('${subjectId}')">📝 Ikuti Kuis 10 Soal (+${subject.xpReward} XP)</button>` :
+          `<div style="background: #27ae60; border-radius: 10px; padding: 10px; margin-top: 15px; text-align: center;">
+             ✅ Anda sudah lulus kuis ${subject.name}! Nilai terbaik: ${progress.bestScore}/100
+           </div>`
+        }
+      </div>
+    `;
+    showSection('subjects');
+  }
+
+  function startQuiz(subjectId) {
+    if (gameState.energy < 10) {
+      showToast("⚠️ Energy tidak cukup! Beli Energy Potion di Toko!", 2000);
+      return;
+    }
+    const subject = subjects.find(s => s.id === subjectId);
+    if (!subject) return;
+    
+    let currentQuestion = 0;
+    let score = 0;
+    const questions = subject.quiz;
+    const totalQuestions = questions.length;
+    
+    function renderQuestion() {
+      const q = questions[currentQuestion];
+      document.getElementById('materiPreview').innerHTML = `
+        <div style="background: rgba(0,0,0,0.5); border-radius: 20px; padding: 20px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+            <span>📋 ${subject.name}</span>
+            <span>⭐ Score: ${score}</span>
+            <span>📝 ${currentQuestion+1}/${totalQuestions}</span>
+          </div>
+          <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 20px;">${q.q}</div>
+          ${q.o.map((opt, idx) => `<button class="quiz-option" onclick="answerQuiz(${idx}, ${q.c}, '${q.exp.replace(/'/g, "\\'")}')">${String.fromCharCode(65+idx)}. ${opt}</button>`).join('')}
+          <div style="margin-top: 15px;"><small>💡 ${q.exp.substring(0, 80)}...</small></div>
+        </div>
+      `;
+    }
+    
+    window.answerQuiz = (selected, correct, explanation) => {
+      if (selected === correct) {
+        score += Math.floor(100 / totalQuestions);
+        showToast(`✅ Benar! +${Math.floor(100/totalQuestions)} poin`, 800);
+      } else {
+        showToast(`❌ Salah! ${explanation}`, 1500);
+      }
+      currentQuestion++;
+      if (currentQuestion < totalQuestions) {
+        renderQuestion();
+      } else {
+        gameState.energy -= 10;
+        const totalXP = Math.floor(score * 0.8) + 20;
+        addXP(totalXP);
+        gameState.coins += Math.floor(score / 2);
+        
+        if (score >= 70 && !gameState.subjectProgress[subjectId].quizCompleted) {
+          gameState.subjectProgress[subjectId].quizCompleted = true;
+          gameState.quizPassed++;
+          showToast(`🎉 Selamat! Anda lulus kuis ${subject.name}! +50 Koin bonus! 🎉`, 3000);
+          gameState.coins += 50;
+          checkAchievements();
+        }
+        if (score > (gameState.subjectProgress[subjectId].bestScore || 0)) {
+          gameState.subjectProgress[subjectId].bestScore = score;
+        }
+        
+        gameState.dailyMissions.study.current++;
+        if (gameState.dailyMissions.study.current >= gameState.dailyMissions.study.target && !gameState.dailyMissions.study.completed) {
+          gameState.dailyMissions.study.completed = true;
+          addXP(gameState.dailyMissions.study.reward);
+          showToast(`🎯 Misi Harian Selesai! +${gameState.dailyMissions.study.reward} XP`, 2000);
+        }
+        
+        updateUI();
+        saveGame();
+        renderSubjects();
+        renderProgressStats();
+        
+        document.getElementById('materiPreview').innerHTML = `
+          <div style="text-align: center; background: rgba(0,0,0,0.5); border-radius: 20px; padding: 30px;">
+            <div style="font-size: 3rem;">${score >= 70 ? '🏆' : '📚'}</div>
+            <h3>Kuis Selesai!</h3>
+            <p>Skor: ${score}/100</p>
+            <p>✨ +${totalXP} XP</p>
+            <p>🪙 +${Math.floor(score/2)} Koin</p>
+            ${score >= 70 ? '<p style="color: #FFD700;">✨ Selamat Anda Lulus! ✨</p>' : '<p style="color: #ff9999;">Pelajari materi lagi untuk lulus kuis!</p>'}
+            <button class="nav-btn" style="margin-top: 20px;" onclick="showSubjectMateri('${subjectId}')">Kembali ke Materi</button>
+          </div>
+        `;
+        saveGame();
+      }
+    };
+    
+    renderQuestion();
+  }
+
+  function renderProgressStats() {
+    const completed = subjects.filter(s => gameState.subjectProgress[s.id]?.quizCompleted).length;
+    const html = `
+      <div style="background: rgba(0,0,0,0.3); border-radius: 15px; padding: 15px;">
+        <div>📚 Total Mapel: <strong>${subjects.length}</strong></div>
+        <div>✅ Lulus Kuis: <strong>${completed}</strong> / ${subjects.length}</div>
+        <div class="xp-bar-container" style="margin: 10px 0;"><div class="xp-bar-fill" style="width: ${(completed/subjects.length)*100}%;"></div></div>
+        <div>🏆 Predikat: <strong>${completed === subjects.length ? 'SARJANA MUDA' : completed >= 5 ? 'PELAJAR PRODUKTIF' : 'PELAJAR PEMULA'}</strong></div>
+      </div>
+    `;
+    document.getElementById('progressStats').innerHTML = html;
+  }
+
+  function checkAchievements() {
+    const completed = subjects.filter(s => gameState.subjectProgress[s.id]?.quizCompleted).length;
+    if (completed >= 5 && !gameState.achievements.includes('setengah')) {
+      gameState.achievements.push('setengah');
+      addXP(200);
+      showToast("🏅 Achievement: 5 Mapel Lulus! +200 XP", 2000);
+    }
+    if (completed === subjects.length && !gameState.achievements.includes('lengkap')) {
+      gameState.achievements.push('lengkap');
+      addXP(500);
+      showToast("🏅 Achievement: Mahir 10 Mapel! +500 XP", 3000);
+    }
+    if (gameState.level >= 5 && !gameState.achievements.includes('level5')) {
+      gameState.achievements.push('level5');
+      addXP(150);
+      showToast("🏅 Achievement: Level 5! +150 XP", 2000);
+    }
+    saveGame();
+  }
+
+  function renderAchievements() {
+    const achievementList = [
+      { id: 'setengah', name: '⚡ PELAJAR TANGKAS', desc: 'Lulus 5 mata pelajaran', icon: '🏅' },
+      { id: 'lengkap', name: '🎓 SARJANA MUDA', desc: 'Lulus semua 10 mapel', icon: '🎓' },
+      { id: 'level5', name: '⭐ LEVEL UP!', desc: 'Mencapai level 5', icon: '⭐' }
+    ];
+    const html = achievementList.map(ach => {
+      const unlocked = gameState.achievements.includes(ach.id);
+      return `
+        <div class="achievement-badge ${unlocked ? 'achievement-unlocked' : ''}">
+          <div style="font-size: 2rem;">${ach.icon}</div>
+          <div>
+            <div style="font-weight: bold;">${ach.name}</div>
+            <small>${ach.desc}</small>
+            <div>${unlocked ? '✅ Telah diraih' : '🔒 Belum diraih'}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+    document.getElementById('achievementsList').innerHTML = html;
+  }
+
+  function dailyReward() {
+    const today = new Date().toDateString();
+    if (gameState.lastDaily !== today) {
+      gameState.lastDaily = today;
+      addXP(150);
+      gameState.coins += 100;
+      gameState.energy = Math.min(100, gameState.energy + 25);
+      showToast(`🎁 Daily Reward! +150 XP, +100 Koin, +25 Energy`, 3000);
+      updateUI();
+      saveGame();
+    } else {
+      showToast("Daily reward sudah diklaim hari ini! Kembali besok!", 2000);
+    }
+  }
+
+  function renderShop() {
+    document.getElementById('shopContent').innerHTML = `
+      <div class="subject-card" onclick="buyItem('energy')" style="margin-bottom: 10px;">
+        <div class="icon">⚡</div>
+        <div><strong>Energy Potion</strong></div>
+        <div>+20 Energy</div>
+        <div style="color: #FFD700;">50 Koin</div>
+      </div>
+      <div class="subject-card" onclick="buyItem('xp')" style="margin-bottom: 10px;">
+        <div class="icon">📚</div>
+        <div><strong>Buku Belajar</strong></div>
+        <div>+60 XP</div>
+        <div style="color: #FFD700;">100 Koin</div>
+      </div>
+      <div class="subject-card" onclick="buyItem('coinboost')">
+        <div class="icon">🪙</div>
+        <div><strong>Koin Boost</strong></div>
+        <div>+100 Koin</div>
+        <div style="color: #FFD700;">120 Koin</div>
+      </div>
+    `;
+  }
+
+  function buyItem(item) {
+    if (item === 'energy' && gameState.coins >= 50) {
+      gameState.coins -= 50;
+      gameState.energy = Math.min(100, gameState.energy + 20);
+      showToast("⚡ +20 Energy!", 1500);
+    } else if (item === 'xp' && gameState.coins >= 100) {
+      gameState.coins -= 100;
+      addXP(60);
+      showToast("📚 +60 XP!", 1500);
+    } else if (item === 'coinboost' && gameState.coins >= 120) {
+      gameState.coins -= 120;
+      gameState.coins += 100;
+      showToast("🪙 +100 Koin!", 1500);
+    } else {
+      showToast("Koin tidak cukup!", 1500);
+    }
+    updateUI();
+    saveGame();
+    renderShop();
+  }
+
+  function showLeaderboard() {
+    const dummyLeaderboard = [
+      { name: "Andi Pratama", school: "SMPN 1 Raya", xp: gameState.xp + (gameState.level * 800), level: gameState.level },
+      { name: "Siti Aisyah", school: "SMPN 2 Pematang", xp: 18750, level: 15 },
+      { name: "Budi Santoso", school: "SMPN 1 Perdagangan", xp: 16500, level: 13 },
+      { name: "M. Iqbal", school: "SMPN 1 Bandar", xp: 14200, level: 11 },
+      { name: "Putri Melati", school: "SMPN 2 Raya", xp: 13800, level: 11 }
+    ];
+    dummyLeaderboard.sort((a,b) => b.xp - a.xp);
+    const html = `
+      <table style="width: 100%; border-collapse: collapse;">
+        <tr style="background: rgba(0,0,0,0.5);">
+          <th style="padding: 10px;">Rank</th><th>Nama</th><th>Sekolah</th><th>XP</th><th>Level</th>
+        </tr>
+        ${dummyLeaderboard.map((user, idx) => `
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.2);">
+            <td style="padding: 8px;">${idx+1}</td>
+            <td>${user.name}</td>
+            <td>${user.school}</td>
+            <td>${user.xp}</td>
+            <td>${user.level}</td>
+          </tr>
+        `).join('')}
+      </table>
+      <div style="margin-top: 15px; text-align: center;">
+        <small>🏆 Terus belajar untuk menjadi juara!</small>
+      </div>
+    `;
+    document.getElementById('leaderboardList').innerHTML = html;
+  }
+
+  // Auto energy regen setiap 5 menit
+  setInterval(() => {
+    if (gameState.energy < 100) {
+      gameState.energy = Math.min(100, gameState.energy + 1);
+      updateUI();
+      saveGame();
+    }
+  }, 300000);
+
+  init();
+</script>
+</body>
+</html>
